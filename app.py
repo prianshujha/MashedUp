@@ -83,6 +83,34 @@ def deleteFiles(downloadList):
     for x in downloadList:
         os.remove(x)    
 
+def send_email(mailid) :
+    data.write('Sending email....')
+    fromaddr = "mashedupbyprianshu@gmail.com"
+    toaddr = mailid
+    msg = MIMEMultipart()
+    msg['From'] = fromaddr
+    msg['To'] = toaddr
+    msg['Subject'] = "Mashup"
+    body = "Enjoy your mashup :) "
+    msg.attach(MIMEText(body, 'plain'))
+    attachment = open('Mashup.zip', "rb")
+    p = MIMEBase('application', 'octet-stream')
+    p.set_payload((attachment).read())
+  
+    encoders.encode_base64(p)
+   
+    p.add_header('Content-Disposition', "attachment; filename= %s" % "mashup.zip")
+    msg.attach(p)
+    s = smtplib.SMTP('smtp.gmail.com',587)
+    s.starttls()
+    s.login(fromaddr, 'sxaiyxxwtrdrqqyh')
+    text = msg.as_string()
+    s.sendmail(fromaddr, toaddr, text)
+    s.quit()
+
+    data.empty()
+    st.info('process completed')
+
 st.title('Mashedup- Mashup songs from your fav artists')
 
 st.write('Enter name of your favourite singer, number of songs, amount of song to trim and you will reveive a mashup through your email')
