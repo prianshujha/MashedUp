@@ -139,11 +139,11 @@ if submit_button :
         if match[0] != email :
             st.error('Wrong email')
         else :
-            try :
-                nsec = int(nsec)
-                n = int(n)
-                getLinks()
-            except :
-                st.error('Invalid input type entered!!')
+            # try :
+            nsec = int(nsec)
+            n = int(n)
+            getLinks()
+            # except :
+                # st.error('Invalid input type entered!!')
     else :
         st.error('Please enter data in all fields')
