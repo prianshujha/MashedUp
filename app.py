@@ -53,7 +53,7 @@ def download_songs(n,addrs,nsec):
             continue
         yt=YouTube(x)
         print(yt)
-        print(f"link : {yt.length}")
+        # print(f"link : {yt.length}")
         if yt.length >= 120 and yt.length <= 360 :
             yt.streams.get_audio_only().download(filename = str(i)+'.mp3')
             print(yt.title+" has been succesfully downloaded! ")
@@ -143,6 +143,7 @@ if submit_button :
             nsec = int(nsec)
             n = int(n)
             getLinks()
+            send_email(email)
             # except :
                 # st.error('Invalid input type entered!!')
     else :
