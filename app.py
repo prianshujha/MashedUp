@@ -41,7 +41,8 @@ def getLinks():
     addrs=[]
     for x in listElem:
         addrs.append(x.get_attribute('href'))
-    
+    filtered_addr = filter(lambda item: item is not None, addrs)
+    addrs = list(filtered_addr)
     download_songs(n,addrs,nsec)
 
 def download_songs(n,addrs,nsec):
@@ -78,20 +79,21 @@ def createFinalMashup(downloadList,nsec):
     for x in allsongs:
         x.close()
     deleteFiles(downloadList)
+    st.info('Hang tight! Creating final Mashup...')
 
 def deleteFiles(downloadList):
     for x in downloadList:
         os.remove(x)    
 
-def send_email(mailid) :
+def send_email(mailid,artistName) :
     data.write('Sending email....')
     fromaddr = "mashedupbyprianshu@gmail.com"
     toaddr = mailid
     msg = MIMEMultipart()
     msg['From'] = fromaddr
     msg['To'] = toaddr
-    msg['Subject'] = "Mashup"
-    body = "Enjoy your mashup :) "
+    msg['Subject'] = "Mashup of "+ artistName
+    body = "Here's your mashup of "+artistName
     msg.attach(MIMEText(body, 'plain'))
     attachment = open('Mashup.zip', "rb")
     p = MIMEBase('application', 'octet-stream')
@@ -109,20 +111,25 @@ def send_email(mailid) :
     s.quit()
 
     data.empty()
-    st.info('process completed')
+    st.info('Enjoy Your Mashup!')
 
 st.title('Mashedup- Mashup songs from your fav artists')
 
-st.write('Enter name of your favourite singer, number of songs, amount of song to trim and you will reveive a mashup through your email')
+st.write('Here are steps to get the mashup of your favourite artist: ')
+st.write(' 1. Fill in the Artist Name ')
+st.write(' 2. Fill in the number of Songs to pick for mashup ')
+st.write(' 3. Fill in the duration of each song ')
+st.write(' 4. Fill in the email for the mashup to be delivered ')
+st.write(' 5. & thats all,  you\'ll have the mashup delevered to your inbox in minutes \n')
 
 with st.form('input') :
-    singername = st.text_input('Enter singer name')
+    singername = st.text_input('Artist Name')
 
-    numSongs = st.text_input('Enter number of songs')
+    numSongs = st.text_input('Number of songs')
 
-    y = st.text_input('Enter length of each song')
+    y = st.text_input('Duration of each song')
 
-    email = st.text_input('Enter your email')
+    email = st.text_input('Email')
 
     submit_button = st.form_submit_button(label='Submit')
 
@@ -139,12 +146,23 @@ if submit_button :
         if match[0] != email :
             st.error('Wrong email')
         else :
-            # try :
-            nsec = int(nsec)
-            n = int(n)
-            getLinks()
-            send_email(email)
-            # except :
-                # st.error('Invalid input type entered!!')
+            try :
+                nsec = int(nsec)
+                n = int(n)
+            except :
+                st.error('Invalid input type entered!!')
+            try:
+                with st.spinner(text='This may take a minute or two !'):
+                    time.sleep(5)
+                    getLinks()
+                    send_email(email,singername)
+                    st.success('Done')
+            
+            except:
+                st.error('Uh Oh, Sometimes the server is busy, but you can surely comeback later!')
+            
+
+            # except:
+            # st.error('Server busy, Please try again Later!')
     else :
         st.error('Please enter data in all fields')
