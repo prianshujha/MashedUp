@@ -35,7 +35,7 @@ def getLinks():
     browser.get(ytUrl)
 
 
-    time.sleep(15)
+    time.sleep(20)
 
     listElem=browser.find_elements('xpath','//a[@id="thumbnail"]') ## only pick n links
     addrs=[]
@@ -160,7 +160,10 @@ if submit_button :
             # try:
             with st.spinner(text='This may take a minute or two !'):
                 time.sleep(5)
-                getLinks()
+                try:
+                  getLinks()
+                 except:
+                  st.error('Uh, Oh...The server seems to be busy, but you can surely comeback later :)')
                 send_email(email,singername)
                 st.success('Done')
             
