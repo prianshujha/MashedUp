@@ -52,17 +52,23 @@ def download_songs(n,addrs,nsec):
     for x in addrs:
         if x==None :
             continue
-        yt=YouTube(x)
-        print(yt)
+        try :
+            yt=YouTube(x)
+            print(yt)
         # print(f"link : {yt.length}")
-        if yt.length >= 120 and yt.length <= 360 :
-            yt.streams.get_audio_only().download(filename = str(i)+'.mp3')
-            print(yt.title+" has been succesfully downloaded! ")
-            downloadList.append(str(i)+'.mp3')
-            i += 1
-            nc=nc-1
-            if nc<=0:
-                break
+            if yt.length >= 120 and yt.length <= 360 :
+                if yt.length<nsec:
+                    continue
+                yt.streams.get_audio_only().download(filename = str(i)+'.mp3')
+                print(yt.title+" has been succesfully downloaded! ")
+                downloadList.append(str(i)+'.mp3')
+                i += 1
+                nc=nc-1
+                if nc<=0:
+                    break
+        except :
+            print('error')
+            
     createFinalMashup(downloadList,nsec)
     
 def createFinalMashup(downloadList,nsec):
@@ -141,7 +147,7 @@ if submit_button :
         n = numSongs.split()[0]
         nsec = y.split()[0]
         email = email.split()[0]
-        regex = '[A-Za-z0-9_]*@[A-Za-z]*\.[A-Za-z]*'
+        regex = '[A-Za-z0-9._]*@[A-Za-z]*\.[A-Za-z]*'
         match = re.findall(regex,email)
         if match[0] != email :
             st.error('Wrong email')
@@ -151,15 +157,15 @@ if submit_button :
                 n = int(n)
             except :
                 st.error('Invalid input type entered!!')
-            try:
-                with st.spinner(text='This may take a minute or two !'):
-                    time.sleep(5)
-                    getLinks()
-                    send_email(email,singername)
-                    st.success('Done')
+            # try:
+            with st.spinner(text='This may take a minute or two !'):
+                time.sleep(5)
+                getLinks()
+                send_email(email,singername)
+                st.success('Done')
             
-            except:
-                st.error('Uh Oh, Sometimes the server is busy, but you can surely comeback later!')
+            # except:
+                # st.error('Uh Oh, Sometimes the server is busy, but you can surely comeback later!')
             
 
             # except:
