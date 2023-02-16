@@ -162,7 +162,7 @@ if submit_button :
                 time.sleep(5)
                 try:
                   getLinks()
-                 except:
+                except:
                   st.error('Uh, Oh...The server seems to be busy, but you can surely comeback later :)')
                 send_email(email,singername)
                 st.success('Done')
